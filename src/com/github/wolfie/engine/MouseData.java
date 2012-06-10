@@ -1,4 +1,4 @@
-package com.github.wolfie.fight2;
+package com.github.wolfie.engine;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

@@ -1,9 +1,9 @@
-package com.github.wolfie.fight2;
+package com.github.wolfie.engine;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Collection;
 
 public abstract class KeyData implements KeyListener {
 
@@ -30,7 +30,7 @@ public abstract class KeyData implements KeyListener {
 		}
 	}
 
-	private final Map<Integer, Key> keys = new HashMap<>();
+	private final MultiHashMap<Integer, Key> keys = new MultiHashMap<>();
 
 	@Override
 	public void keyTyped(final KeyEvent e) {
@@ -47,8 +47,8 @@ public abstract class KeyData implements KeyListener {
 	}
 
 	private void set(final KeyEvent e) {
-		final Key key = keys.get(e.getKeyCode());
-		if (key != null) {
+		final Collection<Key> keys = this.keys.get(e.getKeyCode());
+		for (final Key key : keys) {
 			key.nextState = (e.getID() == KeyEvent.KEY_PRESSED);
 		}
 	}
@@ -59,7 +59,7 @@ public abstract class KeyData implements KeyListener {
 		}
 	}
 
-	protected void add(final Key key, final int keycode) {
-		keys.put(keycode, key);
+	protected void add(final int keycode, final Key... keys) {
+		this.keys.putAll(keycode, Arrays.asList(keys));
 	}
 }

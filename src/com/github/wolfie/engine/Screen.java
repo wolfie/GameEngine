@@ -1,4 +1,4 @@
-package com.github.wolfie.fight2;
+package com.github.wolfie.engine;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
