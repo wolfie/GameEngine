@@ -148,7 +148,7 @@ public class MultiHashMap<K, V> {
 
 	public Collection<V> values() {
 		if (isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		final ArrayList<V> values = new ArrayList<>();

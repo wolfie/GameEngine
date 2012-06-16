@@ -37,7 +37,7 @@ public class Bitmap {
 
 	public Bitmap copy() {
 		final Bitmap rValue = new Bitmap(this.w, this.h);
-		rValue.pixels = this.pixels.clone();
+		rValue.pixels = Arrays.copyOf(this.pixels, this.pixels.length);
 		return rValue;
 	}
 
@@ -80,15 +80,15 @@ public class Bitmap {
 		final int gg = backgroundColor & 0xff00;
 		final int bb = backgroundColor & 0xff;
 
-		int r = (pixelToBlendColor & 0xff0000);
-		int g = (pixelToBlendColor & 0xff00);
-		int b = (pixelToBlendColor & 0xff);
+		int r = pixelToBlendColor & 0xff0000;
+		int g = pixelToBlendColor & 0xff00;
+		int b = pixelToBlendColor & 0xff;
 
 		r = ((r * alpha_blend + rr * alpha_background) >> 8) & 0xff0000;
 		g = ((g * alpha_blend + gg * alpha_background) >> 8) & 0xff00;
 		b = ((b * alpha_blend + bb * alpha_background) >> 8) & 0xff;
 
-		return 0xff000000 | r | g | b;
+		return (backgroundColor & 0xFF000000) | r | g | b;
 	}
 
 	public void blit(final Bitmap bitmap, final int x, final int y,
@@ -428,10 +428,18 @@ public class Bitmap {
 
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				bitmap.pixels[y + x * w] = pixels[((h - 1) - y) + x * w];
+				bitmap.pixels[y * w + (w - x - 1)] = pixels[y * w + x];
 			}
 		}
 
 		return bitmap;
+	}
+
+	public Bitmap blend(final int color) {
+		final Bitmap copy = copy();
+		for (int i = 0; i < copy.pixels.length; i++) {
+			copy.pixels[i] = blendPixels(copy.pixels[i], color);
+		}
+		return copy;
 	}
 }

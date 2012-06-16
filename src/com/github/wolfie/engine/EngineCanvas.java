@@ -3,12 +3,15 @@ package com.github.wolfie.engine;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowListener;
@@ -25,6 +28,17 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 abstract public class EngineCanvas extends Canvas implements Runnable {
+
+	public static Cursor createBlankCursor() {
+		final BufferedImage cursor = new BufferedImage(16, 16,
+				BufferedImage.TYPE_INT_ARGB);
+		return createCursorFrom(cursor);
+	}
+
+	public static Cursor createCursorFrom(final BufferedImage cursorImage) {
+		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImage,
+				new Point(0, 0), "custom");
+	}
 
 	public class FightFocusListener implements FocusListener {
 
@@ -219,7 +233,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 
 	private void tick(final long nsSinceLastTick) {
 		keyData.tick();
-		final TickData tickData = new TickData(keyData);
+		final TickData tickData = new TickData(keyData, mouseData);
 		guiStack.peek().tick(nsSinceLastTick, tickData);
 	}
 
@@ -289,6 +303,8 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 
 	abstract public void unpauseGame();
 
+	abstract protected Cursor createCursor();
+
 	protected static void init() {
 		// System.setProperty("sun.java2d.opengl", "True");
 		// System.setProperty("sun.java2d.d3d", "True");
@@ -302,9 +318,9 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.addWindowListener(getConfig().getGameInstance()
-				.getWindowListener());
+		frame.addWindowListener(game.getWindowListener());
 		frame.setVisible(true);
+		frame.getContentPane().setCursor(game.createCursor());
 		game.start();
 
 		System.out.println("Tick length (ns) " + TICK_LENGHT_NANO);
