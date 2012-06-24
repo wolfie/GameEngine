@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public abstract class KeyData implements KeyListener {
 
-	public final class Key {
+	public static final class Key {
 		public boolean nextState = false;
 		public boolean wasDown = false;
 		public boolean isDown = false;
@@ -31,6 +31,12 @@ public abstract class KeyData implements KeyListener {
 	}
 
 	private final MultiHashMap<Integer, Key> keys = new MultiHashMap<>();
+
+	public final Key shift = new Key();
+
+	public KeyData() {
+		add(KeyEvent.VK_SHIFT, shift);
+	}
 
 	@Override
 	public void keyTyped(final KeyEvent e) {

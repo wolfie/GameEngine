@@ -35,10 +35,14 @@ public abstract class GameObject extends Rect implements GuiElement {
 		final double velocityY = getVelocityY(nsBetweenTicks);
 		moveX(velocityX);
 		moveY(velocityY);
+		_postMove();
 
 		// initial speed + acceleration * time = final speed
 		velocityYPPS += gravity * Util.nanoSecondsToSeconds(nsBetweenTicks);
 		_tick(nsBetweenTicks, tickData);
+	}
+
+	protected void _postMove() {
 	}
 
 	protected abstract void moveX(final double velocityX);

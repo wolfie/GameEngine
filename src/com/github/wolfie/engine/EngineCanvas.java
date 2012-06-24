@@ -53,7 +53,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 
 	}
 
-	private static final int SCALE = getConfig().getScale();
+	public static final int SCALE = getConfig().getScale();
 	public static final int WIDTH = getConfig().getWidth();
 	public static final int HEIGHT = getConfig().getHeight();
 
@@ -119,6 +119,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 	private final MouseData mouseData = new MouseData();
 	private final Screen screen = new Screen(WIDTH, HEIGHT);
 	public final Stack<GameScreen> guiStack = new Stack<>();
+	private final TickData tickData;
 
 	public EngineCanvas() {
 		instance = this;
@@ -131,6 +132,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 		addMouseListener(mouseData);
 
 		guiStack.add(getGameScreen());
+		tickData = new TickData(keyData, mouseData);
 	}
 
 	abstract protected GameScreen getGameScreen();
@@ -193,14 +195,6 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 				e.printStackTrace();
 				break;
 			}
-
-			// if (currentTime != lastTick) {
-			// System.out.println(String.format("%s, %s",
-			// (currentTime - lastTick) / TIME_UNITS_IN_SECOND * 1000,
-			// "foo")
-			//
-			// );
-			// }
 		}
 
 		System.exit(0);
@@ -233,8 +227,8 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 
 	private void tick(final long nsSinceLastTick) {
 		keyData.tick();
-		final TickData tickData = new TickData(keyData, mouseData);
 		guiStack.peek().tick(nsSinceLastTick, tickData);
+		mouseData.tick();
 	}
 
 	private void render(final long nsSinceLastFrame, final Graphics g) {
