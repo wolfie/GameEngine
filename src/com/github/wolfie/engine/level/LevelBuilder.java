@@ -44,6 +44,7 @@ abstract public class LevelBuilder {
 				tile.x = x;
 				tile.y = y;
 				tiles[i] = tile;
+				
 			}
 		}
 

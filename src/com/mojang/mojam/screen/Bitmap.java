@@ -1,6 +1,7 @@
 package com.mojang.mojam.screen;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Arrays;
 
 public class Bitmap {
@@ -17,6 +18,10 @@ public class Bitmap {
 		this.w = w;
 		this.h = h;
 		this.pixels = pixels;
+	}
+
+	public Bitmap(final Dimension dimension) {
+		this(dimension.width, dimension.height);
 	}
 
 	public Bitmap(final int[][] pixels2D) {
@@ -45,8 +50,29 @@ public class Bitmap {
 		Arrays.fill(pixels, color);
 	}
 
-	public void blit(final Bitmap bitmap, final int x, final int y) {
+	public void blit(final Bitmap bitmap, final int x, final int y,
+			final Alignment align) {
+		final int alignedX;
+		if (align.isLeft()) {
+			alignedX = x;
+		} else if (align.isCenter()) {
+			alignedX = w / 2 - bitmap.w / 2;
+		} else {
+			alignedX = w - bitmap.w - x;
+		}
 
+		final int alignedY;
+		if (align.isTop()) {
+			alignedY = y;
+		} else if (align.isMiddle()) {
+			alignedY = h / 2 - bitmap.h / 2;
+		} else {
+			alignedY = h - bitmap.h - y;
+		}
+		blit(bitmap, alignedX, alignedY);
+	}
+
+	public void blit(final Bitmap bitmap, final int x, final int y) {
 		final Rect blitArea = new Rect(x, y, bitmap.w, bitmap.h);
 		adjustBlitArea(blitArea);
 		final int blitWidth = (int) blitArea.bottomRightX
@@ -69,11 +95,10 @@ public class Bitmap {
 		}
 	}
 
-	public int blendPixels(final int backgroundColor,
+	public static int blendPixels(final int backgroundColor,
 			final int pixelToBlendColor) {
 
 		final int alpha_blend = (pixelToBlendColor >> 24) & 0xff;
-
 		final int alpha_background = 256 - alpha_blend;
 
 		final int rr = backgroundColor & 0xff0000;
@@ -88,7 +113,7 @@ public class Bitmap {
 		g = ((g * alpha_blend + gg * alpha_background) >> 8) & 0xff00;
 		b = ((b * alpha_blend + bb * alpha_background) >> 8) & 0xff;
 
-		return (backgroundColor & 0xFF000000) | r | g | b;
+		return backgroundColor & 0xff000000 | r | g | b;
 	}
 
 	public void blit(final Bitmap bitmap, final int x, final int y,
@@ -441,5 +466,9 @@ public class Bitmap {
 			copy.pixels[i] = blendPixels(copy.pixels[i], color);
 		}
 		return copy;
+	}
+
+	public void blendSelf(final int color) {
+		pixels = blend(color).pixels;
 	}
 }

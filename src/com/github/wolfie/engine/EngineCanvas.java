@@ -63,7 +63,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 	private static final long MIN_NANOS_PER_FRAME = Util
 			.secondsToNanoSeconds(1.0d / FPS_CAP);
 
-	public static EngineCanvas instance;
+	private static EngineCanvas instance;
 	private static ThreadLocal<Config> CONFIG;
 
 	abstract protected WindowListener getWindowListener();
@@ -78,6 +78,10 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 		}
 
 		return CONFIG.get();
+	}
+
+	public static EngineCanvas getInstance() {
+		return instance;
 	}
 
 	private static void initConfig() {
@@ -116,7 +120,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 	}
 
 	public final KeyData keyData = getKeyData();
-	private final MouseData mouseData = new MouseData();
+	public final MouseData mouseData = new MouseData();
 	private final Screen screen = new Screen(WIDTH, HEIGHT);
 	public final Stack<GameScreen> guiStack = new Stack<>();
 	private final TickData tickData;
