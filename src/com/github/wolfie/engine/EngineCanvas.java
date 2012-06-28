@@ -182,7 +182,7 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 			if (nextFrame <= currentTime) {
 				final BufferStrategy bs = getEnsuredBufferStrategy();
 				render((currentTime - lastFrame) + 1, bs.getDrawGraphics());
-				lastFrame = System.nanoTime();
+				lastFrame = currentTime;
 				nextFrame = currentTime + MIN_NANOS_PER_FRAME;
 				bs.show();
 			}
