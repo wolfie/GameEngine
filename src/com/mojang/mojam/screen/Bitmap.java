@@ -283,8 +283,18 @@ public class Bitmap {
 		}
 	}
 
-	public void rectangle(final int x, final int y, final int bw, final int bh,
-			final int color) {
+	public void rectangle(int x, int y, int bw, int bh, final int color) {
+
+		if (bw < 0) {
+			x += bw;
+			bw *= -1;
+		}
+
+		if (bh < 0) {
+			y += bh;
+			bh *= -1;
+		}
+
 		int x0 = x;
 		int x1 = x + bw;
 		int y0 = y;
