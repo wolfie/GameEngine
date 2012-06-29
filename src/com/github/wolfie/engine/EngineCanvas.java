@@ -5,7 +5,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -23,7 +22,6 @@ import java.util.Stack;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -243,11 +241,6 @@ abstract public class EngineCanvas extends Canvas implements Runnable {
 		g.translate((getWidth() - getScaledWidth()) / 2,
 				(getHeight() - getScaledHeight()) / 2);
 		g.clipRect(0, 0, getScaledWidth(), getScaledHeight());
-
-		final JLabel label = new JLabel("hello");
-		label.setFont(new Font("Sans Serif", Font.PLAIN, 16));
-		label.setForeground(Color.BLACK);
-		label.paint(g);
 
 		final BufferedImage image = toCompatibleImage(screen.getImage());
 		g.drawImage(image, 0, 0, getScaledWidth(), getScaledHeight(), null);
